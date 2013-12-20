@@ -24,3 +24,8 @@ a,
 a:hover {
 	color: #FFF;
 }
+
+#map-canvas {
+	height: 300px;
+	width: 600px;
+}
