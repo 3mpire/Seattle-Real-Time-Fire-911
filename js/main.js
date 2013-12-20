@@ -26,7 +26,7 @@ $(document).ready(function(){
 				var lat = incident[11];
 				var long = incident[12];
 
-				incidents.push('<tr><td>' + indicentID + '</td><td>' + type + '</td><td><a href="map.html?lat=' + lat + '&long=' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td><td>' + lat + '</td><td>' + long + '</td></tr>');
+				incidents.push('<tr><td>' + indicentID + '</td><td>' + type + '</td><td><a href="map.html?lat=' + lat + '&long=' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
 			});
 
 			$("#log").append(incidents.join(''));
