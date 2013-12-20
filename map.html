@@ -17,10 +17,12 @@
                 padding-bottom: 20px;
             }
         </style>
+
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAvdRomIDaiZMf6wiJzaR6xYymSbbw13G4&sensor=false"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -50,7 +52,7 @@
       <div class="row">
         <div class="col-lg-12">
           <h1>Incident Map</h1>
-          <!-- TODO: put Google map here. -->
+          <div id="map-canvas"></div>
         </div>
       </div>
 
@@ -65,7 +67,7 @@
 
         <script src="js/vendor/bootstrap.min.js"></script>
 
-        <!--<script src="js/main.js"></script>-->
+        <script src="js/map.js"></script>
 
         <!--<script>
         //     var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
