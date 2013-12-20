@@ -19,14 +19,14 @@ $(document).ready(function(){
 				// Lat 			[11]
 				// Long 		[12]
 
-				var indicentID = incident[14];
+				var incidentID = incident[14];
 				var address = incident[8];
 				var type = incident[9];
 				var date = new Date(incident[10] * 1000);
 				var lat = incident[11];
 				var long = incident[12];
 
-				incidents.push('<tr><td>' + indicentID + '</td><td>' + type + '</td><td><a href="map.html?lat=' + lat + '&long=' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
+				incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a href="map.html?id=' + incidentID + '&lat=' + lat + '&long=' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
 			});
 
 			$("#log").append(incidents.join(''));
