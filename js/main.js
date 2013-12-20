@@ -27,17 +27,8 @@ $(document).ready(function(){
 				var long = incident[12];
 
 				incidents.push('<tr><td>' + indicentID + '</td><td>' + type + '</td><td>' + address + '</td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td><td>' + lat + '</td><td>' + long + '</td></tr>');
-
-				// var row = [];
-
-				// for(var column = 0; column < incident.length; column++){
-				// 	//row.push('<td>' + column + ', ' + incident[column] + "</td>")
-				// }
-
-				// incidents.push('<tr>' + row + '</tr>');
 			});
 
-			//$("#log").append('<tr><th colspan="4" class="summary"><strong>' + incidents.length + '</strong> records returned.</th></tr>')
 			$("#log").append(incidents.join(''));
 		},
 		error: function(xhr, status, error) {
