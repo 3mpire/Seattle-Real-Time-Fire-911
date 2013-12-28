@@ -1,17 +1,15 @@
-$(document).ready(function(){
+var log = { Refresh: function(){
 	var dataSource = "http://data.seattle.gov/api/views/kzjm-xkqj/rows.json?jsonp=?&max_rows=100";
+	console.log('refreshing...');
 
 	$.ajax({
 		type : "GET",
 		dataType : "JSONP",
 		url : dataSource,
 		success: function(result) {
-			console.log(result.data);
 
 			var incidents = [];
 			$.each( result.data, function( i, incident ) {
-				console.log(incident);
-
 				// Incident ID 	[14]
 				// Address		[8]
 				// Type 		[9]
@@ -34,5 +32,12 @@ $(document).ready(function(){
 		error: function(xhr, status, error) {
 		  	console.log(JSON.parse(xhr.responseText));
 		}
-	});
+	}).complete(function(){
+		//Refresh feed every 5 minutes.
+        setTimeout(function(){log.Refresh();}, 300000);
+    });
+} };
+
+$(document).ready(function(){
+	log.Refresh();
 });
