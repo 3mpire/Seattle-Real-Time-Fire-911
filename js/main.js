@@ -27,7 +27,8 @@ var log = { Refresh: function(){
 				var lat = incident[11];
 				var long = incident[12];
 
-				incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a href="map.html?id=' + incidentID + '&lat=' + lat + '&long=' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
+				//incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a href="map.html?id=' + incidentID + '&lat=' + lat + '&long=' + long + '" title="lat: ' + lat + '; long: ' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
+				incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a data-toggle="modal" data-target="#incident-modal" data-incidentid="' + incidentID + '" title="lat: ' + lat + '; long: ' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
 			});
 
 			//First remove existing rows.
@@ -44,6 +45,8 @@ var log = { Refresh: function(){
 		//Refresh feed every 5 minutes.
         setTimeout(function(){log.Refresh();}, 300000);
     });
+}, GetIncident: function(incidentId) {
+	//TODO: Get JSON for a single incident.
 } };
 
 $(document).ready(function(){
@@ -53,4 +56,11 @@ $(document).ready(function(){
 $("#refresh").on('click', function(event){
 	event.preventDefault();
 	log.Refresh();
+});
+
+$('#incident-modal').on('show.bs.modal', function (e) {
+  	var incident = $(e.relatedTarget);
+  	var incidentId = incident.data('incidentid');
+  	var modalWindowTitle = $('#incident-modal-title');
+  	modalWindowTitle.text('Incident ' + incidentId);
 });
