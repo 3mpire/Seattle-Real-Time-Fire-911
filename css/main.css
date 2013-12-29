@@ -29,3 +29,12 @@ a:hover {
 	height: 300px;
 	width: 600px;
 }
+
+.btn-refresh {
+	float: right;
+}
+
+#spinner {
+	padding: 10px;
+	background-color: #f3f3f3;
+}

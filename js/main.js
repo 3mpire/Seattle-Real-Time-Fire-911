@@ -1,13 +1,16 @@
 var log = { Refresh: function(){
 	var dataSource = "http://data.seattle.gov/api/views/kzjm-xkqj/rows.json?jsonp=?&max_rows=100";
 	console.log('refreshing...');
+	var spinner = $('#spinner')
 
 	$.ajax({
 		type : "GET",
 		dataType : "JSONP",
 		url : dataSource,
+		beforeSend: function () {
+			spinner.slideDown();
+		},
 		success: function(result) {
-
 			var incidents = [];
 			$.each( result.data, function( i, incident ) {
 				// Incident ID 	[14]
@@ -27,17 +30,27 @@ var log = { Refresh: function(){
 				incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a href="map.html?id=' + incidentID + '&lat=' + lat + '&long=' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
 			});
 
+			//First remove existing rows.
+			$("#log").find('tr:gt(0)').remove();
+
+			//Next append new data.
 			$("#log").append(incidents.join(''));
 		},
 		error: function(xhr, status, error) {
 		  	console.log(JSON.parse(xhr.responseText));
 		}
 	}).complete(function(){
+		spinner.slideUp();
 		//Refresh feed every 5 minutes.
         setTimeout(function(){log.Refresh();}, 300000);
     });
 } };
 
 $(document).ready(function(){
+	log.Refresh();
+});
+
+$("#refresh").on('click', function(event){
+	event.preventDefault();
 	log.Refresh();
 });
