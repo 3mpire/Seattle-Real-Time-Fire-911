@@ -26,7 +26,7 @@ var log = { Refresh: function(){
 				var lat = incident[11];
 				var long = incident[12];
 
-				incidents.push('<tr data-toggle="modal" data-target="#incident-modal" data-incidentid="' + incidentID + '" data-incident="' + incident + '" data-lat="' + lat + '" data-lng="' + long + '" ><td>' + incidentID + '</td><td>' + type + '</td><td>' + address + '</td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
+				incidents.push('<tr data-toggle="modal" data-target="#incident-modal" data-incidentid="' + incidentID + '" data-incident="' + incident + '" data-lat="' + lat + '" data-lng="' + long + '" data-type="' + type + '" data-address="' + address + '" ><td>' + incidentID + '</td><td>' + type + '</td><td>' + address + '</td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
 			});
 
 			//First remove existing rows.
@@ -87,13 +87,15 @@ $('#incident-modal').on('show.bs.modal', function (e) {
   	var incidentId = incident.data('incidentid');
   	var incidentLat = incident.data('lat');
   	var incidentLng = incident.data('lng');
+  	var incidentType = incident.data('type');
+  	var incidentAddress = incident.data('address');
   	var incidentData = incident.data('incident');
   	var modalWindowTitle = $('#incident-modal-title');
   	var modalWindowBody = $('#incident-modal-body');
 
   	log.GetMap(incidentLat, incidentLng, incidentId);
 
-  	modalWindowTitle.text(incidentId);
+  	modalWindowTitle.text(incidentId + ": " + incidentType + ", " + incidentAddress);
   	// modalWindowBody.html(incidentData);
 });
 
