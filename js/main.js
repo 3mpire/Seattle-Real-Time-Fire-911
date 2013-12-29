@@ -8,7 +8,7 @@ var log = { Refresh: function(){
 		dataType : "JSONP",
 		url : dataSource,
 		beforeSend: function () {
-			spinner.slideDown();
+			spinner.slideDown('slow');
 		},
 		success: function(result) {
 			var incidents = [];
@@ -28,7 +28,7 @@ var log = { Refresh: function(){
 				var long = incident[12];
 
 				//incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a href="map.html?id=' + incidentID + '&lat=' + lat + '&long=' + long + '" title="lat: ' + lat + '; long: ' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
-				incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a data-toggle="modal" data-target="#incident-modal" data-incidentid="' + incidentID + '" title="lat: ' + lat + '; long: ' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
+				incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a data-toggle="modal" data-target="#incident-modal" data-incidentid="' + incidentID + '" data-incident="' + incident + '" title="lat: ' + lat + '; long: ' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
 			});
 
 			//First remove existing rows.
@@ -41,7 +41,7 @@ var log = { Refresh: function(){
 		  	console.log(JSON.parse(xhr.responseText));
 		}
 	}).complete(function(){
-		spinner.slideUp();
+		spinner.slideUp('slow');
 		//Refresh feed every 5 minutes.
         setTimeout(function(){log.Refresh();}, 300000);
     });
@@ -61,6 +61,10 @@ $("#refresh").on('click', function(event){
 $('#incident-modal').on('show.bs.modal', function (e) {
   	var incident = $(e.relatedTarget);
   	var incidentId = incident.data('incidentid');
+  	var incidentData = incident.data('incident');
   	var modalWindowTitle = $('#incident-modal-title');
-  	modalWindowTitle.text('Incident ' + incidentId);
+  	var modalWindowBody = $('#incident-modal-body');
+
+  	modalWindowTitle.text(incidentId);
+  	modalWindowBody.html(incidentData);
 });
