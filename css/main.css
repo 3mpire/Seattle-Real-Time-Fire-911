@@ -37,4 +37,6 @@ a:hover {
 #spinner {
 	padding: 10px;
 	background-color: #f3f3f3;
+	color: red;
+	font-weight: bolder;
 }
