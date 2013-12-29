@@ -55,7 +55,7 @@ var log = { Refresh: function(){
 
 	window.map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
-	// To add the marker to the map, use the 'map' property
+	// Add Marker.
 	var marker = new google.maps.Marker({
 	    position: incidentLatLng,
 	    animation: google.maps.Animation.DROP,
@@ -63,6 +63,7 @@ var log = { Refresh: function(){
 	    title:("#" + incidentId)
 	});
 
+	// Add InfoWindow.
 	marker.info = new google.maps.InfoWindow({
 	  content: '<b>Incident:</b> ' + incidentId
 	});
@@ -70,6 +71,18 @@ var log = { Refresh: function(){
 	google.maps.event.addListener(marker, 'click', function() {
 	  marker.info.open(map, marker);
 	});
+
+	// Invert colors.
+	// reference: https://developers.google.com/maps/documentation/javascript/styling
+	var styles = [
+	  {
+	    "stylers": [
+      		{ "invert_lightness": true }
+    	]
+	  }
+	];
+
+	map.setOptions({styles: styles});
 }
 };
 
