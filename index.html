@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDQynvR8vH-PgWeYNhbuXEjZAE1HOBECVw&sensor=false"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -72,7 +73,10 @@
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 class="modal-title" id="incident-modal-title"></h4>
             </div>
-            <div class="modal-body" id="incident-modal-body"></div>
+            <div class="modal-body">
+              <div id="incident-modal-body"></div>
+              <div id="map-canvas"></div>
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>

@@ -32,7 +32,7 @@ a:hover {
 
 #map-canvas {
 	height: 300px;
-	width: 600px;
+	width: 100%;
 }
 
 .btn-refresh {
@@ -50,4 +50,13 @@ a:hover {
 	cursor: pointer;
 	background-color: #CCC;
 	color: #000000;
+}
+
+#incident-modal .modal-dialog {
+	width: 70%;
+}
+
+#incident-modal .modal-content {
+	background-color: #666;
+	color: #CCC;
 }
