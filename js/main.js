@@ -26,7 +26,6 @@ var log = { Refresh: function(){
 				var lat = incident[11];
 				var long = incident[12];
 
-				//incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a href="map.html?id=' + incidentID + '&lat=' + lat + '&long=' + long + '" title="lat: ' + lat + '; long: ' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
 				incidents.push('<tr data-toggle="modal" data-target="#incident-modal" data-incidentid="' + incidentID + '" data-incident="' + incident + '" data-lat="' + lat + '" data-lng="' + long + '" ><td>' + incidentID + '</td><td>' + type + '</td><td>' + address + '</td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
 			});
 
@@ -59,8 +58,17 @@ var log = { Refresh: function(){
 	// To add the marker to the map, use the 'map' property
 	var marker = new google.maps.Marker({
 	    position: incidentLatLng,
+	    animation: google.maps.Animation.DROP,
 	    map: map,
 	    title:("#" + incidentId)
+	});
+
+	marker.info = new google.maps.InfoWindow({
+	  content: '<b>Incident:</b> ' + incidentId
+	});
+
+	google.maps.event.addListener(marker, 'click', function() {
+	  marker.info.open(map, marker);
 	});
 }
 };
@@ -86,7 +94,7 @@ $('#incident-modal').on('show.bs.modal', function (e) {
   	log.GetMap(incidentLat, incidentLng, incidentId);
 
   	modalWindowTitle.text(incidentId);
-  	modalWindowBody.html(incidentData);
+  	// modalWindowBody.html(incidentData);
 });
 
 $('#incident-modal').on('shown.bs.modal', function (e) {
@@ -98,5 +106,5 @@ $('#incident-modal').on('shown.bs.modal', function (e) {
 	var center = new google.maps.LatLng(incidentLat, incidentLng);
 
     google.maps.event.trigger(document.getElementById("map-canvas"), "resize");
-    window.map.panTo(center);
+    window.map.setCenter(center);
 });
