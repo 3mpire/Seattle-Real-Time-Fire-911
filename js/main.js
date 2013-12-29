@@ -1,6 +1,5 @@
 var log = { Refresh: function(){
 	var dataSource = "http://data.seattle.gov/api/views/kzjm-xkqj/rows.json?jsonp=?&max_rows=100";
-	console.log('refreshing...');
 	var spinner = $('#spinner')
 
 	$.ajax({
@@ -28,7 +27,7 @@ var log = { Refresh: function(){
 				var long = incident[12];
 
 				//incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a href="map.html?id=' + incidentID + '&lat=' + lat + '&long=' + long + '" title="lat: ' + lat + '; long: ' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
-				incidents.push('<tr><td>' + incidentID + '</td><td>' + type + '</td><td><a data-toggle="modal" data-target="#incident-modal" data-incidentid="' + incidentID + '" data-incident="' + incident + '" title="lat: ' + lat + '; long: ' + long + '">' + address + '</a></td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
+				incidents.push('<tr data-toggle="modal" data-target="#incident-modal" data-incidentid="' + incidentID + '" data-incident="' + incident + '" ><td>' + incidentID + '</td><td>' + type + '</td><td>' + address + '</td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
 			});
 
 			//First remove existing rows.

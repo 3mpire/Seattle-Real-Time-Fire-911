@@ -49,8 +49,9 @@
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-lg-12">
-          <button id="refresh" class="btn btn-refresh">Refresh</button>
+          <button id="refresh" class="btn btn-info btn-refresh">Refresh</button>
           <h1>Incident Log</h1>
+          <p>Data automatically refreshes every five minutes.</p>
           <div id="spinner">Fetching latest data from data.seattle.gov ...</div>
           <table id="log" class="table table-striped">
             <tr>
@@ -74,7 +75,6 @@
             <div class="modal-body" id="incident-modal-body"></div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -83,7 +83,7 @@
       <hr>
 
       <footer>
-        <p>This is just for fun</p>
+        <p><a href="http://charleswesley.net">charleswesley.net</a></p>
       </footer>
     </div> <!-- /container -->        
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>

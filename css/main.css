@@ -11,12 +11,17 @@ body {
 	background-color: #222;
 }
 
-.table thead>tr>th, .table tbody>tr>th, .table tfoot>tr>th, .table thead>tr>td, .table tbody>tr>td, .table tfoot>tr>td {
+.table thead>tr>th, 
+.table tbody>tr>th, 
+.table tfoot>tr>th, 
+.table thead>tr>td, 
+.table tbody>tr>td, 
+.table tfoot>tr>td {
 	border-top: none;
 }
 
-
-.table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
+.table-striped>tbody>tr:nth-child(odd)>td, 
+.table-striped>tbody>tr:nth-child(odd)>th {
 	background-color: #222;
 }
 
@@ -39,4 +44,10 @@ a:hover {
 	background-color: #f3f3f3;
 	color: red;
 	font-weight: bolder;
+}
+
+#log tr:hover>td {
+	cursor: pointer;
+	background-color: #CCC;
+	color: #000000;
 }
