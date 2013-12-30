@@ -1,6 +1,17 @@
+// Incident object definition.
+function Incident(incidentData) {
+	this.ID = incidentData[14];
+	this.Address = incidentData[8];
+	this.Category = incidentData[9];
+	this.DateLogged = new Date(incidentData[10] * 1000);
+	this.Lat = incidentData[11];
+	this.Lng = incidentData[12];
+};
+
 var log = { Refresh: function(){
 	var dataSource = "http://data.seattle.gov/api/views/kzjm-xkqj/rows.json?jsonp=?&max_rows=100";
-	var spinner = $('#spinner')
+	var spinner = $('#spinner');
+	var incidents [];
 
 	$.ajax({
 		type : "GET",
@@ -10,30 +21,20 @@ var log = { Refresh: function(){
 			spinner.slideDown('slow');
 		},
 		success: function(result) {
-			var incidents = [];
-			$.each( result.data, function( i, incident ) {
-				// Incident ID 	[14]
-				// Address		[8]
-				// Type 		[9]
-				// Datetime 	[10]
-				// Lat 			[11]
-				// Long 		[12]
+			var tableData = [];
+			
+			$.each( result.data, function( i, incidentData ) {
+				var thisIncident = new Incident(incidentData);
+				this.incidents.push(thisIncident);
 
-				var incidentID = incident[14];
-				var address = incident[8];
-				var type = incident[9];
-				var date = new Date(incident[10] * 1000);
-				var lat = incident[11];
-				var long = incident[12];
-
-				incidents.push('<tr data-toggle="modal" data-target="#incident-modal" data-incidentid="' + incidentID + '" data-incident="' + incident + '" data-lat="' + lat + '" data-lng="' + long + '" data-type="' + type + '" data-address="' + address + '" ><td>' + incidentID + '</td><td>' + type + '</td><td>' + address + '</td><td>' + date.toLocaleTimeString() + ' ' + date.toLocaleDateString() + '</td></tr>');
+				tableData.push('<tr data-toggle="modal" data-target="#incident-modal" data-incident="' + thisIncident + '" data-incidentid="' + thisIncident.ID + '" data-lat="' + thisIncident.Lat + '" data-lng="' + thisIncident.Lng + '" data-type="' + thisIncident.Category + '" data-address="' + thisIncident.Address + '" ><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + thisIncident.DateLogged.toLocaleTimeString() + ' ' + thisIncident.DateLogged.toLocaleDateString() + '</td></tr>');
 			});
 
 			//First remove existing rows.
 			$("#log").find('tr:gt(0)').remove();
 
 			//Next append new data.
-			$("#log").append(incidents.join(''));
+			$("#log").append(tableData.join(''));
 		},
 		error: function(xhr, status, error) {
 		  	console.log(JSON.parse(xhr.responseText));
@@ -44,7 +45,14 @@ var log = { Refresh: function(){
         setTimeout(function(){log.Refresh();}, 300000);
     });
 }, GetIncident: function(incidentId) {
-	//TODO: Get JSON for a single incident.
+	if (this.incidents.length > 0) {
+		//TODO: see if incident exists in array.
+	}
+	else {
+		//TODO: Get JSON for a single incident.
+	}
+	
+	return null;
 }, GetMap: function(lat, lng, incidentId) {
 	var incidentLatLng = new google.maps.LatLng(lat,lng);
 
@@ -96,29 +104,22 @@ $("#refresh").on('click', function(event){
 });
 
 $('#incident-modal').on('show.bs.modal', function (e) {
-  	var incident = $(e.relatedTarget);
-  	var incidentId = incident.data('incidentid');
-  	var incidentLat = incident.data('lat');
-  	var incidentLng = incident.data('lng');
-  	var incidentType = incident.data('type');
-  	var incidentAddress = incident.data('address');
-  	var incidentData = incident.data('incident');
+  	var incidentRow = $(e.relatedTarget);
+  	var incident = JSON.parse(incidentRow.data('incident'));
   	var modalWindowTitle = $('#incident-modal-title');
-  	var modalWindowBody = $('#incident-modal-body');
 
-  	log.GetMap(incidentLat, incidentLng, incidentId);
+  	console.log(incident);
 
-  	modalWindowTitle.text(incidentId + ": " + incidentType + ", " + incidentAddress);
-  	// modalWindowBody.html(incidentData);
+  	log.GetMap(incident.Lat, incident.Lng, incident.ID);
+  	modalWindowTitle.text(incident.ID + ": " + incident.Category + ", " + incident.Address);
 });
 
 $('#incident-modal').on('shown.bs.modal', function (e) {
 	//Resize: http://stackoverflow.com/questions/11742839/showing-a-google-map-in-a-modal-created-with-twitter-bootstrap
 	//Recenter: http://stackoverflow.com/a/10002547/1754037
-	var incident = $(e.relatedTarget);
-	var incidentLat = incident.data('lat');
-  	var incidentLng = incident.data('lng');
-	var center = new google.maps.LatLng(incidentLat, incidentLng);
+	var incidentRow = $(e.relatedTarget);
+	var incident = JSON.parse(incidentRow.data('incident'));
+	var center = new google.maps.LatLng(incident.Lat, incident.Lng);
 
     google.maps.event.trigger(document.getElementById("map-canvas"), "resize");
     window.map.setCenter(center);
