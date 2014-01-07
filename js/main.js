@@ -26,8 +26,15 @@ var log = {
 			success: function(result) {								
 				$.each( result.data, function( i, incidentData ) {
 					var thisIncident = new Incident(incidentData);
-					window.incidents.push(thisIncident);
+
+					// Only push if there is not an object in the array with a matching IncidentID.
+					if (!isIncidentLogged(thisIncident))
+					{
+						window.incidents.push(thisIncident);
+					}
 				});
+
+				window.incidents.sort(compareIncidentsDateLogged)
 			},
 			error: function(xhr, status, error) {
 			  	console.log(JSON.parse(xhr.responseText));
@@ -96,7 +103,7 @@ var log = {
 		});
 
 		// Invert colors.
-		// reference: https://developers.google.com/maps/documentation/javascript/styling
+		// Reference: https://developers.google.com/maps/documentation/javascript/styling
 		var styles = [
 		  {
 		    "stylers": [
@@ -108,6 +115,27 @@ var log = {
 		map.setOptions({styles: styles});
 	}
 };
+
+
+// Reference: http://stackoverflow.com/questions/1129216/sorting-objects-in-an-array-by-a-field-value-in-javascript
+function compareIncidentsDateLogged(a,b) {
+  if (a.DateLogged > b.DateLogged)
+     return -1;
+  if (a.DateLogged < b.DateLogged)
+    return 1;
+  return 0;
+}
+
+function isIncidentLogged(incident) {
+	for (var i = 0; i < window.incidents.length; i++)
+	{
+		if (window.incidents[i].ID == incident.ID)
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 $(document).ready(function(){
 	log.RefreshData();
@@ -128,8 +156,8 @@ $('#incident-modal').on('show.bs.modal', function (e) {
 });
 
 $('#incident-modal').on('shown.bs.modal', function (e) {
-	//Resize: http://stackoverflow.com/questions/11742839/showing-a-google-map-in-a-modal-created-with-twitter-bootstrap
-	//Recenter: http://stackoverflow.com/a/10002547/1754037
+	// Resize: http://stackoverflow.com/questions/11742839/showing-a-google-map-in-a-modal-created-with-twitter-bootstrap
+	// Recenter: http://stackoverflow.com/a/10002547/1754037
 	var incidentRow = $(e.relatedTarget);
   	var incident = log.GetIncident(incidentRow.attr('id'));
 	var center = new google.maps.LatLng(incident.Lat, incident.Lng);
