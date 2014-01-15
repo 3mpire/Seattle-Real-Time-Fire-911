@@ -20,6 +20,7 @@ var log = {
 			type : "GET",
 			dataType : "JSONP",
 			url : dataSource,
+			timeout: 10000,
 			beforeSend: function () {
 				spinner.slideDown('slow');
 			},
@@ -34,9 +35,10 @@ var log = {
 					}
 				});
 
-				window.incidents.sort(compareIncidentsDateLogged)
+				log.SortData(window.incidents);
 			},
 			error: function(xhr, status, error) {
+				spinner.text(JSON.parse(xhr.responseText));
 			  	console.log(JSON.parse(xhr.responseText));
 			}
 		}).complete(function(){
@@ -46,6 +48,26 @@ var log = {
 	        setTimeout(function(){log.RefreshData();}, 300000);
 	    });
 	}, 
+	SortData: function(data) {
+		// Reference: http://www.stoimen.com/blog/2010/07/09/friday-algorithms-javascript-bubble-sort/
+
+		if (data.length > 0 || data != undefined) {
+			var swapped;
+			do {
+				swapped = false;
+
+				for (var i = 0; i < data.length - 1; i++) {
+					if (data[i].DateLogged < data[i + 1].DateLogged) {
+						var temp = data[i];
+						data[i] = data[i+1];
+						data[i+1] = temp;
+						swapped = true;
+					}
+				}
+
+			} while (swapped);
+		}
+	},
 	RefreshTable: function () {
 		var tableData = [];
 
@@ -115,16 +137,6 @@ var log = {
 		map.setOptions({styles: styles});
 	}
 };
-
-
-// Reference: http://stackoverflow.com/questions/1129216/sorting-objects-in-an-array-by-a-field-value-in-javascript
-function compareIncidentsDateLogged(a,b) {
-  if (a.DateLogged > b.DateLogged)
-     return -1;
-  if (a.DateLogged < b.DateLogged)
-    return 1;
-  return 0;
-}
 
 function isIncidentLogged(incident) {
 	for (var i = 0; i < window.incidents.length; i++)
