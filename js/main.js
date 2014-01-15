@@ -20,6 +20,7 @@ var log = {
 			type : "GET",
 			dataType : "JSONP",
 			url : dataSource,
+			timeout: 10000,
 			beforeSend: function () {
 				spinner.slideDown('slow');
 			},
@@ -37,6 +38,7 @@ var log = {
 				log.SortData(window.incidents);
 			},
 			error: function(xhr, status, error) {
+				spinner.text(JSON.parse(xhr.responseText));
 			  	console.log(JSON.parse(xhr.responseText));
 			}
 		}).complete(function(){
@@ -55,7 +57,7 @@ var log = {
 				swapped = false;
 
 				for (var i = 0; i < data.length - 1; i++) {
-					if (data[i] > data[i + 1]) {
+					if (data[i].DateLogged < data[i + 1].DateLogged) {
 						var temp = data[i];
 						data[i] = data[i+1];
 						data[i+1] = temp;
