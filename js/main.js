@@ -14,32 +14,8 @@ window.incidents = [];
 var log = { 
 	LastRefresh: undefined,
 	RefreshData: function() {
-		var dataSource;
+		var dataSource = log.GetDataSource();
 		var spinner = $('#spinner');
-
-		if (log.LastRefresh === undefined) {
-			// Get current time in miliseconds since the epoch.
-			var currentTime = new Date().getTime();
-			// Convert to seconds.
-			currentTime = (currentTime / 1000);
-			// Subtract the number of seconds in 24 hours.
-			currentTime = Math.floor(currentTime - (60 * 60 * 24));
-			
-			// Convert back to date.
-			var dayAgo = new Date(currentTime*1000);
-			// Convert to ISO-8601 string.
-			dayAgo = dayAgo.toISOString();
-
-			// Get all incidents that occured within the last 24 hours.
-			dataSource = "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + dayAgo + '\'';
-			console.log(dataSource);
-		}
-		else
-		{
-			//TODO: figure out how to limit query to only records after the last refresh.
-			console.log('Last refresh: ' + log.LastRefresh);
-			dataSource = "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + log.LastRefresh + '\'';
-		}
 
 		$.ajax({
 			type : "GET",
@@ -52,6 +28,7 @@ var log = {
 			success: function(result) {		
 				console.log('Rows returned: ' + result.data.length);
 
+				// Process the result.
 				$.each( result.data, function( i, incidentData ) {
 					var thisIncident = new Incident(incidentData);
 
@@ -62,6 +39,7 @@ var log = {
 					}
 				});
 
+				// Order array chronologically.
 				log.SortData(window.incidents);
 
 				// Only update LastRefresh if new data was found otherwise retain the existing timestamp.
@@ -77,7 +55,8 @@ var log = {
 		}).complete(function(){
 			spinner.slideUp('slow');
 			log.RefreshTable();
-			//Refresh feed every 5 minutes.
+			// Refresh feed every 5 minutes.
+			// TODO: Make sure only 1 refresh timer is running at a time.  I believe this is currently adding a new timer with every complete.
 	        setTimeout(function(){log.RefreshData();}, 300000);
 	    });
 	}, 
@@ -170,6 +149,30 @@ var log = {
 		];
 
 		map.setOptions({styles: styles});
+	},
+	GetDataSource: function() {
+		if (log.LastRefresh === undefined) {
+			// Get current time in miliseconds since the epoch.
+			var currentTime = new Date().getTime();
+			// Convert to seconds.
+			currentTime = (currentTime / 1000);
+			// Subtract the number of seconds in 24 hours.
+			currentTime = Math.floor(currentTime - (60 * 60 * 24));
+			
+			// Convert back to date.
+			var dayAgo = new Date(currentTime * 1000);
+			// Convert to ISO-8601 string.
+			dayAgo = dayAgo.toISOString();
+
+			console.log(dataSource);
+			return "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + dayAgo + '\'';
+			
+		}
+		else
+		{
+			console.log('Last refresh: ' + log.LastRefresh);
+			return "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + log.LastRefresh + '\'';
+		}
 	}
 };
 
