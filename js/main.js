@@ -12,29 +12,45 @@ function Incident(incidentData) {
 window.incidents = [];
 
 var log = { 
-	LastRefresh: undefined;
+	LastRefresh: undefined,
 	RefreshData: function() {
 		var dataSource;
 		var spinner = $('#spinner');
 
 		if (log.LastRefresh === undefined) {
-			dataSource  = "http://data.seattle.gov/api/views/kzjm-xkqj/rows.json?jsonp=?&max_rows=100";
+			// Get current time in miliseconds since the epoch.
+			var currentTime = new Date().getTime();
+			// Convert to seconds.
+			currentTime = (currentTime / 1000);
+			// Subtract the number of seconds in 24 hours.
+			currentTime = Math.floor(currentTime - (60 * 60 * 24));
+			
+			// Convert back to date.
+			var dayAgo = new Date(currentTime*1000);
+			// Convert to ISO-8601 string.
+			dayAgo = dayAgo.toISOString();
+
+			// Get all incidents that occured within the last 24 hours.
+			dataSource = "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + dayAgo + '\'';
+			console.log(dataSource);
 		}
 		else
 		{
 			//TODO: figure out how to limit query to only records after the last refresh.
+			console.log('Last refresh: ' + log.LastRefresh);
+			dataSource = "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + log.LastRefresh + '\'';
 		}
 
 		$.ajax({
 			type : "GET",
-			dataType : "JSONP",
+			dataType : "JSON",
 			url : dataSource,
 			timeout: 10000,
 			beforeSend: function () {
 				spinner.slideDown('slow');
 			},
 			success: function(result) {		
-				log.LastRefresh = Date.now();
+				console.log('Rows returned: ' + result.data.length);
 
 				$.each( result.data, function( i, incidentData ) {
 					var thisIncident = new Incident(incidentData);
@@ -47,10 +63,16 @@ var log = {
 				});
 
 				log.SortData(window.incidents);
+
+				// Only update LastRefresh if new data was found otherwise retain the existing timestamp.
+				if (result.data.length > 0) {
+					var logged = new Date();
+					log.LastRefresh = logged.toISOString();
+				}
 			},
 			error: function(xhr, status, error) {
-				spinner.text(JSON.parse(xhr.responseText));
-			  	console.log(JSON.parse(xhr.responseText));
+				spinner.text('Error retrieving data.');
+			  	console.log('Error: ' + JSON.parse(xhr.responseText));
 			}
 		}).complete(function(){
 			spinner.slideUp('slow');
@@ -86,6 +108,8 @@ var log = {
 			var thisIncident = window.incidents[i];
 			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + thisIncident.DateLogged.toLocaleTimeString() + ' ' + thisIncident.DateLogged.toLocaleDateString() + '</td></tr>');
 		}
+
+		console.log('Table rows: ' + tableData.length);
 
 		//First remove existing rows.
 		$("#log").find('tr:gt(0)').remove();
