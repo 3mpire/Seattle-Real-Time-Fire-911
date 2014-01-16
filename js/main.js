@@ -12,9 +12,18 @@ function Incident(incidentData) {
 window.incidents = [];
 
 var log = { 
+	LastRefresh: undefined;
 	RefreshData: function() {
-		var dataSource = "http://data.seattle.gov/api/views/kzjm-xkqj/rows.json?jsonp=?&max_rows=100";
+		var dataSource;
 		var spinner = $('#spinner');
+
+		if (log.LastRefresh === undefined) {
+			dataSource  = "http://data.seattle.gov/api/views/kzjm-xkqj/rows.json?jsonp=?&max_rows=100";
+		}
+		else
+		{
+			//TODO: figure out how to limit query to only records after the last refresh.
+		}
 
 		$.ajax({
 			type : "GET",
@@ -24,7 +33,9 @@ var log = {
 			beforeSend: function () {
 				spinner.slideDown('slow');
 			},
-			success: function(result) {								
+			success: function(result) {		
+				log.LastRefresh = Date.now();
+
 				$.each( result.data, function( i, incidentData ) {
 					var thisIncident = new Incident(incidentData);
 
