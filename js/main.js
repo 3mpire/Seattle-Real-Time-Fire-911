@@ -1,11 +1,11 @@
 // Incident object definition.
 function Incident(incidentData) {
-	this.ID = incidentData[14];
-	this.Address = incidentData[8];
-	this.Category = incidentData[9];
-	this.DateLogged = new Date(incidentData[10] * 1000);
-	this.Lat = incidentData[11];
-	this.Lng = incidentData[12];
+	this.ID = incidentData.incident_number;
+	this.Address = incidentData.address;
+	this.Category = incidentData.type;
+	this.DateLogged = new Date(incidentData.datetime * 1000);
+	this.Lat = incidentData.report_location.latitude;
+	this.Lng = incidentData.report_location.longitude;
 };
 
 // Store all fetched incident objects in this global array.
@@ -24,12 +24,11 @@ var log = {
 			timeout: 10000,
 			beforeSend: function () {
 				spinner.slideDown('slow');
+				console.log('Datasource: ' + dataSource);
 			},
 			success: function(result) {		
-				console.log('Rows returned: ' + result.data.length);
-
 				// Process the result.
-				$.each( result.data, function( i, incidentData ) {
+				$.each( result, function( i, incidentData ) {
 					var thisIncident = new Incident(incidentData);
 
 					// Only push if there is not an object in the array with a matching IncidentID.
@@ -39,11 +38,13 @@ var log = {
 					}
 				});
 
+				console.log('New rows: ' + result.length);
+
 				// Order array chronologically.
 				log.SortData(window.incidents);
 
 				// Only update LastRefresh if new data was found otherwise retain the existing timestamp.
-				if (result.data.length > 0) {
+				if (result.length > 0) {
 					var logged = new Date();
 					log.LastRefresh = logged.toISOString();
 				}
@@ -88,7 +89,7 @@ var log = {
 			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + thisIncident.DateLogged.toLocaleTimeString() + ' ' + thisIncident.DateLogged.toLocaleDateString() + '</td></tr>');
 		}
 
-		console.log('Table rows: ' + tableData.length);
+		console.log('Total rows: ' + tableData.length);
 
 		//First remove existing rows.
 		$("#log").find('tr:gt(0)').remove();
@@ -164,13 +165,11 @@ var log = {
 			// Convert to ISO-8601 string.
 			dayAgo = dayAgo.toISOString();
 
-			console.log(dataSource);
 			return "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + dayAgo + '\'';
 			
 		}
 		else
 		{
-			console.log('Last refresh: ' + log.LastRefresh);
 			return "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + log.LastRefresh + '\'';
 		}
 	}
