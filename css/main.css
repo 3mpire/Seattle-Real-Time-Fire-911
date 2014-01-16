@@ -47,6 +47,11 @@ a:hover {
 	font-weight: bolder;
 }
 
+#row-count {
+	width: 100px;
+	float: right;
+}
+
 #log tr:hover>td {
 	cursor: pointer;
 	background-color: #CCC;

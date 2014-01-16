@@ -51,7 +51,7 @@ var log = {
 			},
 			error: function(xhr, status, error) {
 				spinner.text('Error retrieving data.');
-			  	console.log('Error: ' + JSON.parse(xhr.responseText));
+			  	console.log(error);
 			}
 		}).complete(function(){
 			spinner.slideUp('slow');
@@ -180,6 +180,7 @@ function isIncidentLogged(incident) {
 	{
 		if (window.incidents[i].ID == incident.ID)
 		{
+			// TODO: Should I compare to see if any of the properties have changed?
 			return true;
 		}
 	}
