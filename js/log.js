@@ -80,8 +80,7 @@ var log = {
 
 		for (var i = 0; i < window.incidents.length; i++) {
 			var thisIncident = window.incidents[i];
-			//tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + new Date(thisIncident.DateLogged * 1000).toLocaleTimeString() + ' ' + new Date(thisIncident.DateLogged * 1000).toLocaleDateString() + '</td></tr>');
-			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + new Date(thisIncident.DateLogged * 1000).toISOString() + '</td></tr>');
+			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + new Date(thisIncident.DateLogged * 1000).toLocaleTimeString() + ' ' + new Date(thisIncident.DateLogged * 1000).toLocaleDateString() + '</td></tr>');
 		}
 
 		$('#row-count').text('Incidents: ' + tableData.length);
