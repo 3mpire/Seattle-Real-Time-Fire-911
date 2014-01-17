@@ -24,7 +24,6 @@ var log = {
 			timeout: 10000,
 			beforeSend: function () {
 				spinner.slideDown('slow');
-				console.log('Datasource: ' + dataSource);
 			},
 			success: function(result) {		
 				// Process the result.
@@ -38,8 +37,6 @@ var log = {
 					}
 				});
 
-				console.log('New rows: ' + result.length);
-
 				// Order array chronologically.
 				log.SortData(window.incidents);
 
@@ -48,7 +45,6 @@ var log = {
 			},
 			error: function(xhr, status, error) {
 				spinner.text('Error retrieving data.');
-			  	console.log(error);
 			}
 		}).complete(function(){
 			spinner.slideUp('slow');
