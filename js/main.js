@@ -24,7 +24,6 @@ $("#refresh").on('click', function(event){
 });
 
 $('#more').on('click', function(event) {
-	console.log(getOldestIncident());
 	log.RefreshData(false);
 })
 
