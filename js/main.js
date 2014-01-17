@@ -7,7 +7,7 @@ function refreshCountdown() {
 	}
 	else
 	{
-		log.RefreshData();
+		log.RefreshData(true);
 	}
 
 	setTimeout(refreshCountdown, 1000);
@@ -20,8 +20,13 @@ $(document).ready(function(){
 
 $("#refresh").on('click', function(event){
 	event.preventDefault();
-	log.RefreshData();
+	log.RefreshData(true);
 });
+
+$('#more').on('click', function(event) {
+	console.log(getOldestIncident());
+	log.RefreshData(false);
+})
 
 $('#incident-modal').on('show.bs.modal', function (event) {
   	var incidentRow = $(event.relatedTarget);
