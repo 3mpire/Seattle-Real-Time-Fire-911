@@ -1,5 +1,21 @@
+function refreshCountdown() {
+	if (log.SecondsTillRefresh > 0)
+	{
+		var timer = $('#refresh-timer');
+		timer.text('Refresh in ' + log.SecondsTillRefresh + ' seconds.');
+		log.SecondsTillRefresh--;
+	}
+	else
+	{
+		log.RefreshData;
+	}
+
+	setTimeout(refreshCountdown, 1000);
+}
+
 $(document).ready(function(){
 	log.RefreshData();
+	setTimeout(refreshCountdown, 1000);
 });
 
 $("#refresh").on('click', function(event){

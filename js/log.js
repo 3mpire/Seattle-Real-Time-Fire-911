@@ -3,7 +3,7 @@ function Incident(incidentData) {
 	this.ID = incidentData.incident_number;
 	this.Address = incidentData.address;
 	this.Category = incidentData.type;
-	this.DateLogged = new Date(incidentData.datetime * 1000);
+	this.DateLogged = incidentData.datetime ;
 	this.Lat = incidentData.report_location.latitude;
 	this.Lng = incidentData.report_location.longitude;
 };
@@ -12,7 +12,7 @@ function Incident(incidentData) {
 window.incidents = [];
 
 var log = { 
-	LastRefresh: undefined,
+	SecondsTillRefresh: 300,
 	RefreshData: function() {
 		var dataSource = log.GetDataSource();
 		var spinner = $('#spinner');
@@ -43,11 +43,8 @@ var log = {
 				// Order array chronologically.
 				log.SortData(window.incidents);
 
-				// Only update LastRefresh if new data was found otherwise retain the existing timestamp.
-				if (result.length > 0) {
-					var logged = new Date();
-					log.LastRefresh = logged.toISOString();
-				}
+				// Reset timer.
+				log.SecondsTillRefresh = 300;
 			},
 			error: function(xhr, status, error) {
 				spinner.text('Error retrieving data.');
@@ -56,9 +53,6 @@ var log = {
 		}).complete(function(){
 			spinner.slideUp('slow');
 			log.RefreshTable();
-			// Refresh feed every 5 minutes.
-			// TODO: Make sure only 1 refresh timer is running at a time.  I believe this is currently adding a new timer with every complete.
-	        setTimeout(function(){log.RefreshData();}, 300000);
 	    });
 	}, 
 	SortData: function(data) {
@@ -86,10 +80,10 @@ var log = {
 
 		for (var i = 0; i < window.incidents.length; i++) {
 			var thisIncident = window.incidents[i];
-			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + thisIncident.DateLogged.toLocaleTimeString() + ' ' + thisIncident.DateLogged.toLocaleDateString() + '</td></tr>');
+			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + new Date(thisIncident.DateLogged).toLocaleTimeString() + ' ' + new Date(thisIncident.DateLogged).toLocaleDateString() + '</td></tr>');
 		}
 
-		console.log('Total rows: ' + tableData.length);
+		$('#row-count').text('Incidents: ' + tableData.length);
 
 		//First remove existing rows.
 		$("#log").find('tr:gt(0)').remove();
@@ -99,7 +93,6 @@ var log = {
 	},
 	GetIncident: function(incidentId) {
 		if (window.incidents.length > 0) {
-			//TODO: see if incident exists in array.
 			for (var i = 0; i < window.incidents.length; i++) {
 				if (window.incidents[i].ID == incidentId) {
 					return incidents[i];
@@ -152,7 +145,7 @@ var log = {
 		map.setOptions({styles: styles});
 	},
 	GetDataSource: function() {
-		if (log.LastRefresh === undefined) {
+		if (window.incidents.length === 0) {
 			// Get current time in miliseconds since the epoch.
 			var currentTime = new Date().getTime();
 			// Convert to seconds.
@@ -160,17 +153,16 @@ var log = {
 			// Subtract the number of seconds in 24 hours.
 			currentTime = Math.floor(currentTime - (60 * 60 * 24));
 			
-			// Convert back to date.
-			var dayAgo = new Date(currentTime * 1000);
 			// Convert to ISO-8601 string.
-			dayAgo = dayAgo.toISOString();
-
+			var dayAgo = new Date(currentTime * 1000).toISOString();
 			return "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + dayAgo + '\'';
 			
 		}
 		else
 		{
-			return "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + log.LastRefresh + '\'';
+			var incident = getNewestIncident();
+			var dateLogged = new Date(incident.DateLogged * 1000).toISOString();
+			return "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + dateLogged + '\'';
 		}
 	}
 };
@@ -185,4 +177,22 @@ function isIncidentLogged(incident) {
 		}
 	}
 	return false;
+}
+
+function getNewestIncident() {
+	var newestIncident;
+	var data = window.incidents;
+
+	for (var i = 0; i < data.length; i++)
+	{
+		if (newestIncident === undefined) {
+			newestIncident = data[i];
+		}
+
+		if (newestIncident.DateLogged > data[i].DateLogged) {
+			newestIncident = data[i];
+		}
+	}
+
+	return newestIncident;
 }
