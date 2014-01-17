@@ -24,6 +24,7 @@ var log = {
 			url : dataSource,
 			timeout: 10000,
 			beforeSend: function () {
+				spinner.text('Fetching latest data...');
 				spinner.slideDown('slow');
 			},
 			success: function(result) {		
