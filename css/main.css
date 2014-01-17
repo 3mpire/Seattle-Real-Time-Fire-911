@@ -72,6 +72,11 @@ a:hover {
 	background-color: #222;
 	color: #666;
 }
+
+#incident-type-summary .count {
+	float: right;
+}
+
 #incident-type-summary h1 {
 	margin: 0;
 	padding: 10px;
