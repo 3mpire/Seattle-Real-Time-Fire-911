@@ -47,9 +47,15 @@ a:hover {
 	font-weight: bolder;
 }
 
+#refresh-timer {
+	padding: 10px;
+}
+
 #row-count {
-	width: 100px;
+	width: 150px;
 	float: right;
+	padding: 10px;
+	text-align: right;
 }
 
 #log tr:hover>td {
