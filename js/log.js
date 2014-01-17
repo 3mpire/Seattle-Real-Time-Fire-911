@@ -42,7 +42,7 @@ var log = {
 				log.SortData(window.incidents);
 
 				// Reset timer if not returning historical data and new data was found.
-				if (newest && result.length > 0) {
+				if (newest && result.length > 0 || log.SecondsTillRefresh < 1) {
 					log.SecondsTillRefresh = 300;
 				}
 			},
