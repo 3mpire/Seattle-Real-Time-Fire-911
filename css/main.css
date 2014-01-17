@@ -25,6 +25,10 @@ body {
 	background-color: #222;
 }
 
+.table-striped>tbody>tr:first-child>th {
+	background-color: #000;
+}
+
 a,
 a:hover {
 	color: #FFF;
@@ -38,6 +42,10 @@ a:hover {
 
 .btn-refresh {
 	float: right;
+}
+
+.btn-more-wrapper {
+	text-align: center;
 }
 
 #spinner {
@@ -62,6 +70,37 @@ a:hover {
 	cursor: pointer;
 	background-color: #CCC;
 	color: #000000;
+}
+
+#incident-type-summary {
+	background-color: #222;
+	color: #666;
+}
+
+#incident-type-summary .count {
+	float: right;
+}
+
+#incident-type-summary h1 {
+	margin: 0;
+	padding: 10px;
+	background-color: #000;
+	font-size: 1em;
+	color: #CCC;
+}
+
+#incident-type-summary ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#incident-type-summary ul li {
+	padding: 5px 10px;
+}
+
+#incident-type-summary ul li:hover {
+	background-color: #CCC;
 }
 
 #incident-modal .modal-dialog {

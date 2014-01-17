@@ -13,8 +13,9 @@ window.incidents = [];
 
 var log = { 
 	SecondsTillRefresh: 300,
-	RefreshData: function() {
-		var dataSource = log.GetDataSource();
+	BaseUri: 'https://data.seattle.gov/resource/kzjm-xkqj.json',
+	RefreshData: function(newest) {
+		var dataSource = log.GetDataSource(newest);
 		var spinner = $('#spinner');
 
 		$.ajax({
@@ -40,8 +41,10 @@ var log = {
 				// Order array chronologically.
 				log.SortData(window.incidents);
 
-				// Reset timer.
-				log.SecondsTillRefresh = 300;
+				// Reset timer if not returning historical data and new data was found.
+				if (newest && result.length > 0) {
+					log.SecondsTillRefresh = 300;
+				}
 			},
 			error: function(xhr, status, error) {
 				spinner.text('Error retrieving data.');
@@ -86,6 +89,32 @@ var log = {
 
 		//Next append new data.
 		$("#log").append(tableData.join(''));
+
+		log.RefreshSummary();
+	},
+	RefreshSummary: function() {
+		var categories = [], i;
+		var data = window.incidents;
+
+		for (i = 0; i < data.length; i++) {
+			if (categories.indexOf(data[i].Category) < 0) {
+				categories.push(data[i].Category);
+			}
+		}
+
+		if (categories.length > 0) {
+			categories.sort();
+
+			var htmlList = '<h1>Categories</h1><ul>';
+
+			for (i = 0; i < categories.length; i++) {
+				htmlList = htmlList + '<li>' + categories[i] + '<span class=\'count\'>' + getIncidentCountByCategory(categories[i]) + '</span></li>';
+			}
+
+			htmlList = htmlList + '</ul>';
+
+			$('#incident-type-summary').html(htmlList);
+		}
 	},
 	GetIncident: function(incidentId) {
 		if (window.incidents.length > 0) {
@@ -140,7 +169,7 @@ var log = {
 
 		map.setOptions({styles: styles});
 	},
-	GetDataSource: function() {
+	GetDataSource: function(newest) {
 		if (window.incidents.length === 0) {
 			// Get current time in miliseconds since the epoch.
 			var currentTime = new Date().getTime();
@@ -151,18 +180,27 @@ var log = {
 			
 			// Convert to ISO-8601 string.
 			var dayAgo = new Date(currentTime * 1000).toISOString();
-			return "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + dayAgo + '\'';
+			return log.BaseUri + "?$where=datetime>'" + dayAgo + '\'';
 			
 		}
 		else
 		{
-			var incident = getNewestIncident();
-			var dateLogged = new Date(incident.DateLogged * 1000).toISOString();
-			return "https://data.seattle.gov/resource/kzjm-xkqj.json?$where=datetime>'" + dateLogged + '\'';
+			var incident, dateLogged;
+			if (newest) {
+				incident = getNewestIncident();
+				dateLogged = new Date(incident.DateLogged * 1000).toISOString();
+				return log.BaseUri + "?$where=datetime>'" + dateLogged + '\'';
+			}
+			else {
+				incident = getOldestIncident();
+				dateLogged = new Date(incident.DateLogged * 1000).toISOString();
+				return log.BaseUri + "?$where=datetime<'" + dateLogged + '\'&$limit=50&$order=datetime desc';
+			}
 		}
 	}
 };
 
+// Checks to see if an incident already exists in the array matching on ID.
 function isIncidentLogged(incident) {
 	for (var i = 0; i < window.incidents.length; i++)
 	{
@@ -175,11 +213,11 @@ function isIncidentLogged(incident) {
 	return false;
 }
 
+// Returns the most recently logged incident.
 function getNewestIncident() {
-	var newestIncident;
-	var data = window.incidents;
+	var newestIncident, data = window.incidents, i;
 
-	for (var i = 0; i < data.length; i++)
+	for (i = 0; i < data.length; i++)
 	{
 		if (newestIncident === undefined) {
 			newestIncident = data[i];
@@ -192,3 +230,34 @@ function getNewestIncident() {
 
 	return newestIncident;
 }
+
+// Returns the earliest logged incident.
+function getOldestIncident() {
+	var oldestIncident, data = window.incidents, i;
+
+	for (i = 0; i < data.length; i++) {
+		if (oldestIncident === undefined) {
+			oldestIncident = data[i];
+		}
+
+		if (oldestIncident.DateLogged > data[i].DateLogged) {
+			oldestIncident = data[i];
+		}
+	}
+
+	return oldestIncident;
+}
+
+// Returns the number of incidents in a single category.
+function getIncidentCountByCategory(category) {
+	var count = 0, data = window.incidents, i;
+
+	for (i = 0; i < data.length; i++) {
+		if (data[i].Category == category) {
+			count++;
+		}
+	}
+
+	return count;
+}
+
