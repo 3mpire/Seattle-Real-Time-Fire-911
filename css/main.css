@@ -71,7 +71,13 @@ a:hover {
 #incident-type-summary {
 	background-color: #222;
 	color: #666;
-	padding: 5px;
+}
+#incident-type-summary h1 {
+	margin: 0;
+	padding: 10px;
+	background-color: #000;
+	font-size: 1em;
+	color: #CCC;
 }
 
 #incident-type-summary ul {
@@ -81,7 +87,7 @@ a:hover {
 }
 
 #incident-type-summary ul li {
-	padding: 5px;
+	padding: 5px 10px;
 }
 
 #incident-type-summary ul li:hover {

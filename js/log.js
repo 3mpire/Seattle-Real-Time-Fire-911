@@ -101,8 +101,8 @@ var log = {
 
 		if (categories.length > 0) {
 			categories.sort();
-			
-			var htmlList = '<ul>';
+
+			var htmlList = '<h1>Categories</h1><ul>';
 
 			for (i = 0; i < categories.length; i++) {
 				htmlList = htmlList + '<li>' + categories[i] + '</li>';
