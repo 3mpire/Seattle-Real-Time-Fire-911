@@ -204,10 +204,9 @@ function isIncidentLogged(incident) {
 
 // Returns the most recently logged incident.
 function getNewestIncident() {
-	var newestIncident;
-	var data = window.incidents;
+	var newestIncident, data = window.incidents, i;
 
-	for (var i = 0; i < data.length; i++)
+	for (i = 0; i < data.length; i++)
 	{
 		if (newestIncident === undefined) {
 			newestIncident = data[i];
@@ -219,6 +218,23 @@ function getNewestIncident() {
 	}
 
 	return newestIncident;
+}
+
+// Returns the earliest logged incident.
+function getOldestIncident() {
+	var oldestIncident, data = window.incidents, i;
+
+	for (i = 0; i < data.length; i++) {
+		if (oldestIncident === undefined) {
+			oldestIncident = data[i];
+		}
+
+		if (oldestIncident.DateLogged > data[i].DateLogged) {
+			oldestIncident = data[i];
+		}
+	}
+
+	return oldestIncident;
 }
 
 // Returns the number of incidents in a single category.

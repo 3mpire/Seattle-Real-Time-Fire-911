@@ -44,6 +44,10 @@ a:hover {
 	float: right;
 }
 
+.btn-more-wrapper {
+	text-align: center;
+}
+
 #spinner {
 	padding: 10px;
 	background-color: #f3f3f3;
