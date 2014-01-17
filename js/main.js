@@ -7,7 +7,7 @@ function refreshCountdown() {
 	}
 	else
 	{
-		log.RefreshData;
+		log.RefreshData();
 	}
 
 	setTimeout(refreshCountdown, 1000);
