@@ -86,6 +86,34 @@ var log = {
 
 		//Next append new data.
 		$("#log").append(tableData.join(''));
+
+		log.RefreshSummary();
+	},
+	RefreshSummary: function() {
+		var categories = [], i;
+		var data = window.incidents;
+
+		for (i = 0; i < data.length; i++) {
+			if (categories.indexOf(data[i].Category) < 0) {
+				categories.push(data[i].Category);
+			}
+		}
+
+		if (categories.length > 0) {
+			categories.sort();
+			
+			var htmlList = '<ul>';
+
+			for (i = 0; i < categories.length; i++) {
+				htmlList = htmlList + '<li>' + categories[i] + '</li>';
+			}
+
+			htmlList = htmlList + '</ul>';
+
+			$('#incident-type-summary').html(htmlList);
+		}
+
+		
 	},
 	GetIncident: function(incidentId) {
 		if (window.incidents.length > 0) {

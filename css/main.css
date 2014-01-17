@@ -25,6 +25,10 @@ body {
 	background-color: #222;
 }
 
+.table-striped>tbody>tr:first-child>th {
+	background-color: #000;
+}
+
 a,
 a:hover {
 	color: #FFF;
@@ -62,6 +66,26 @@ a:hover {
 	cursor: pointer;
 	background-color: #CCC;
 	color: #000000;
+}
+
+#incident-type-summary {
+	background-color: #222;
+	color: #666;
+	padding: 5px;
+}
+
+#incident-type-summary ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#incident-type-summary ul li {
+	padding: 5px;
+}
+
+#incident-type-summary ul li:hover {
+	background-color: #CCC;
 }
 
 #incident-modal .modal-dialog {
