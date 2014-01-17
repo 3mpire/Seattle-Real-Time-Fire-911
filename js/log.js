@@ -86,6 +86,32 @@ var log = {
 
 		//Next append new data.
 		$("#log").append(tableData.join(''));
+
+		log.RefreshSummary();
+	},
+	RefreshSummary: function() {
+		var categories = [], i;
+		var data = window.incidents;
+
+		for (i = 0; i < data.length; i++) {
+			if (categories.indexOf(data[i].Category) < 0) {
+				categories.push(data[i].Category);
+			}
+		}
+
+		if (categories.length > 0) {
+			categories.sort();
+
+			var htmlList = '<h1>Categories</h1><ul>';
+
+			for (i = 0; i < categories.length; i++) {
+				htmlList = htmlList + '<li>' + categories[i] + '<span class=\'count\'>' + getIncidentCountByCategory(categories[i]) + '</span></li>';
+			}
+
+			htmlList = htmlList + '</ul>';
+
+			$('#incident-type-summary').html(htmlList);
+		}
 	},
 	GetIncident: function(incidentId) {
 		if (window.incidents.length > 0) {
@@ -163,6 +189,7 @@ var log = {
 	}
 };
 
+// Checks to see if an incident already exists in the array matching on ID.
 function isIncidentLogged(incident) {
 	for (var i = 0; i < window.incidents.length; i++)
 	{
@@ -175,6 +202,7 @@ function isIncidentLogged(incident) {
 	return false;
 }
 
+// Returns the most recently logged incident.
 function getNewestIncident() {
 	var newestIncident;
 	var data = window.incidents;
@@ -192,3 +220,17 @@ function getNewestIncident() {
 
 	return newestIncident;
 }
+
+// Returns the number of incidents in a single category.
+function getIncidentCountByCategory(category) {
+	var count = 0, data = window.incidents, i;
+
+	for (i = 0; i < data.length; i++) {
+		if (data[i].Category == category) {
+			count++;
+		}
+	}
+
+	return count;
+}
+
