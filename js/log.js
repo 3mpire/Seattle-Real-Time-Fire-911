@@ -85,7 +85,7 @@ var log = {
 
 		for (var i = 0; i < incidents.length; i++) {
 			var thisIncident = incidents[i];
-			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + new Date(thisIncident.DateLogged * 1000).toLocaleTimeString() + ' ' + new Date(thisIncident.DateLogged * 1000).toLocaleDateString() + '</td></tr>');
+			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + getUserFriendlyDateTime(thisIncident.DateLogged) + '</td></tr>');
 		}
 
 		$('#row-count').text('Incidents: ' + tableData.length);
@@ -101,6 +101,11 @@ var log = {
 	RefreshSummary: function() {
 		var categories = [], i;
 		var data = getIncidents();
+		var incidentRange = $('#incident-range');
+		var newestIncident = data[0];
+		var oldestIncident = data[data.length - 1];
+
+		incidentRange.text('Log for ' + getUserFriendlyDateTime(newestIncident.DateLogged) + ' - ' + getUserFriendlyDateTime(oldestIncident.DateLogged));
 
 		for (i = 0; i < data.length; i++) {
 			if (categories.indexOf(data[i].Category) < 0) {
@@ -267,6 +272,12 @@ function getIncidentCountByCategory(category) {
 	}
 
 	return count;
+}
+
+// Returns a user-friendly date/time string {00:00:00 XX MM/DD/YYYY}.
+function getUserFriendlyDateTime(date) {
+	var friendlyDate = new Date(date * 1000);
+	return friendlyDate.toLocaleTimeString() + ' ' + friendlyDate.toLocaleDateString();
 }
 
 function setIncidents(incidents) {
