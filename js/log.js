@@ -105,7 +105,7 @@ var log = {
 		var newestIncident = data[0];
 		var oldestIncident = data[data.length - 1];
 
-		incidentRange.text('Log for ' + getUserFriendlyDateTime(newestIncident.DateLogged) + ' - ' + getUserFriendlyDateTime(oldestIncident.DateLogged));
+		incidentRange.text(getUserFriendlyDateTime(newestIncident.DateLogged) + ' - ' + getUserFriendlyDateTime(oldestIncident.DateLogged));
 
 		for (i = 0; i < data.length; i++) {
 			if (categories.indexOf(data[i].Category) < 0) {
