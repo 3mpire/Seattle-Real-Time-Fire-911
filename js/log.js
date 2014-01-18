@@ -79,6 +79,15 @@ var log = {
 
 		return data;
 	},
+	SortCategories: function(categories, alphabetically) {
+		if (alphabetically) {
+			return categories.sort();
+		}
+		else {
+			// Bubble sort on incident count.
+			return categories;
+		}
+	},
 	RefreshTable: function () {
 		var tableData = [];
 		incidents = getIncidents();
@@ -101,25 +110,37 @@ var log = {
 	RefreshSummary: function() {
 		var categories = [], i;
 		var data = getIncidents();
+
+		// Display the time range represented by the current dataset.
 		var incidentRange = $('#incident-range');
 		var newestIncident = data[0];
 		var oldestIncident = data[data.length - 1];
 
 		incidentRange.text(getUserFriendlyDateTime(newestIncident.DateLogged) + ' - ' + getUserFriendlyDateTime(oldestIncident.DateLogged));
 
+		// Get a distinct list of categories from the current dataset.
 		for (i = 0; i < data.length; i++) {
-			if (categories.indexOf(data[i].Category) < 0) {
-				categories.push(data[i].Category);
+			var found = false;
+			for (var c = 0; c < categories.length; c++) {
+				if (categories[c].name == data[i].Category) {
+					found = true;
+				}
+			}
+
+			if (found == false) {
+				category = { name: data[i].Category, count: getIncidentCountByCategory(data[i].Category)};
+				categories.push(category);
 			}
 		}
 
 		if (categories.length > 0) {
-			categories.sort();
+			// Sort the categories alphabetically.
+			categories = log.SortCategories(categories, false)
 
 			var htmlList = '<h1>Categories</h1><ul>';
 
 			for (i = 0; i < categories.length; i++) {
-				htmlList = htmlList + '<li>' + categories[i] + '<span class=\'count\'>' + getIncidentCountByCategory(categories[i]) + '</span></li>';
+				htmlList = htmlList + '<li>' + categories[i].name + '<span class=\'count\'>' + categories[i].count + '</span></li>';
 			}
 
 			htmlList = htmlList + '</ul>';
