@@ -9,7 +9,7 @@ function Incident(incidentData) {
 };
 
 // Store all fetched incident objects in this global array.
-window.incidents = [];
+//window.incidents = [];
 
 var log = { 
 	SecondsTillRefresh: 300,
@@ -24,9 +24,12 @@ var log = {
 			url : dataSource,
 			timeout: 10000,
 			beforeSend: function () {
+				spinner.text('Fetching latest data...');
 				spinner.slideDown('slow');
 			},
-			success: function(result) {		
+			success: function(result) {	
+				var incidents = getIncidents();
+
 				// Process the result.
 				$.each( result, function( i, incidentData ) {
 					var thisIncident = new Incident(incidentData);
@@ -34,15 +37,15 @@ var log = {
 					// Only push if there is not an object in the array with a matching IncidentID.
 					if (!isIncidentLogged(thisIncident))
 					{
-						window.incidents.push(thisIncident);
+						incidents.push(thisIncident);
 					}
 				});
 
-				// Order array chronologically.
-				log.SortData(window.incidents);
+				// Order array chronologically and put back into localStorage.
+				setIncidents(log.SortData(incidents));
 
 				// Reset timer if not returning historical data and new data was found.
-				if (newest && result.length > 0) {
+				if (newest && result.length > 0 || log.SecondsTillRefresh < 1) {
 					log.SecondsTillRefresh = 300;
 				}
 			},
@@ -73,12 +76,15 @@ var log = {
 
 			} while (swapped);
 		}
+
+		return data;
 	},
 	RefreshTable: function () {
 		var tableData = [];
+		incidents = getIncidents();
 
-		for (var i = 0; i < window.incidents.length; i++) {
-			var thisIncident = window.incidents[i];
+		for (var i = 0; i < incidents.length; i++) {
+			var thisIncident = incidents[i];
 			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + new Date(thisIncident.DateLogged * 1000).toLocaleTimeString() + ' ' + new Date(thisIncident.DateLogged * 1000).toLocaleDateString() + '</td></tr>');
 		}
 
@@ -94,7 +100,7 @@ var log = {
 	},
 	RefreshSummary: function() {
 		var categories = [], i;
-		var data = window.incidents;
+		var data = getIncidents();
 
 		for (i = 0; i < data.length; i++) {
 			if (categories.indexOf(data[i].Category) < 0) {
@@ -117,15 +123,14 @@ var log = {
 		}
 	},
 	GetIncident: function(incidentId) {
-		if (window.incidents.length > 0) {
-			for (var i = 0; i < window.incidents.length; i++) {
-				if (window.incidents[i].ID == incidentId) {
+		var incidents = getIncidents();
+
+		if (incidents.length > 0) {
+			for (var i = 0; i < incidents.length; i++) {
+				if (incidents[i].ID == incidentId) {
 					return incidents[i];
 				}
 			}
-		}
-		else {
-			//TODO: Get JSON for a single incident.
 		}
 		
 		return null;
@@ -170,7 +175,9 @@ var log = {
 		map.setOptions({styles: styles});
 	},
 	GetDataSource: function(newest) {
-		if (window.incidents.length === 0) {
+		var incidents = getIncidents();
+
+		if (incidents.length === 0) {
 			// Get current time in miliseconds since the epoch.
 			var currentTime = new Date().getTime();
 			// Convert to seconds.
@@ -202,9 +209,10 @@ var log = {
 
 // Checks to see if an incident already exists in the array matching on ID.
 function isIncidentLogged(incident) {
-	for (var i = 0; i < window.incidents.length; i++)
+	var incidents = getIncidents();
+	for (var i = 0; i < incidents.length; i++)
 	{
-		if (window.incidents[i].ID == incident.ID)
+		if (incidents[i].ID == incident.ID)
 		{
 			// TODO: Should I compare to see if any of the properties have changed?
 			return true;
@@ -215,7 +223,7 @@ function isIncidentLogged(incident) {
 
 // Returns the most recently logged incident.
 function getNewestIncident() {
-	var newestIncident, data = window.incidents, i;
+	var newestIncident, data = getIncidents(), i;
 
 	for (i = 0; i < data.length; i++)
 	{
@@ -233,7 +241,7 @@ function getNewestIncident() {
 
 // Returns the earliest logged incident.
 function getOldestIncident() {
-	var oldestIncident, data = window.incidents, i;
+	var oldestIncident, data = getIncidents(), i;
 
 	for (i = 0; i < data.length; i++) {
 		if (oldestIncident === undefined) {
@@ -250,7 +258,7 @@ function getOldestIncident() {
 
 // Returns the number of incidents in a single category.
 function getIncidentCountByCategory(category) {
-	var count = 0, data = window.incidents, i;
+	var count = 0, data = getIncidents(), i;
 
 	for (i = 0; i < data.length; i++) {
 		if (data[i].Category == category) {
@@ -259,5 +267,17 @@ function getIncidentCountByCategory(category) {
 	}
 
 	return count;
+}
+
+function setIncidents(incidents) {
+	localStorage.setItem('incidents', JSON.stringify(incidents));
+}
+
+function getIncidents(incidents) {
+	if (localStorage.getItem('incidents') === null) {
+		setIncidents([]);
+	}
+
+	return JSON.parse(localStorage.getItem('incidents'));
 }
 

@@ -14,7 +14,7 @@ function refreshCountdown() {
 }
 
 $(document).ready(function(){
-	log.RefreshData();
+	log.RefreshData(true);
 	setTimeout(refreshCountdown, 1000);
 });
 
