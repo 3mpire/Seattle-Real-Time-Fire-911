@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Seattle Fire 911 Log | charleswesley.net</title>
+        <title>About | Seattle Fire 911 Log | charleswesley.net</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -39,8 +39,8 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.html">Incidents</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="index.html">Incidents</a></li>
+            <li class="active"><a href="about.html">About</a></li>
           </ul>
         </div><!--/.navbar-collapse -->
       </div>
@@ -49,64 +49,29 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <button id="refresh" class="btn btn-info btn-refresh">Refresh</button>
-          <h1>Incident Log</h1>
+          <h1>About Incident Log</h1>
 
-          <div id="row-count"></div>
-          <div id="refresh-timer"></div>
+          <p>I am using a feed of Seattle Fire Department 911 incident data from <a href="http://data.seattle.gov">data.seattle.gov</a> to experiment with JavaScript and jQuery for fun.</p>
 
-          <div class="row">
-            <div class="col-lg-3">
-              <div id="incident-type-summary"></div>
-            </div>
-            <div class="col-lg-9">
-              <div id="spinner"></div>
-              <table id="log" class="table table-striped">
-                <tr>
-                  <th>#</th>
-                  <th>Category</th>
-                  <th>Address</th>
-                  <th>Logged</th>
-                </tr>
-              </table>
+          <h2>GitHub</h2>
+          <p>You can check out the source code on GitHub and keep tabs on new features I am working on: <a href="https://github.com/3mpire/Seattle-Real-Time-Fire-911">github.com/3mpire/Seattle-Real-Time-Fire-911</a>.</p>
 
-              <div class="btn-more-wrapper">
-                <button id="more" class="btn btn-info">Previous 50</button>
-              </div>
-            </div>
-          </div>
+          <iframe src="http://githubbadge.appspot.com/3mpire" style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0"></iframe>
+
+          <div>
+            <a href="http://stackexchange.com/users/1851561"><img src="http://stackexchange.com/users/flair/1851561.png" width="208" height="58" alt="profile for Charles Wesley on Stack Exchange, a network of free, community-driven Q&A sites" title="profile for Charles Wesley on Stack Exchange, a network of free, community-driven Q&A sites"></a>
+          </div> 
         </div>
       </div>
-
-      <!-- Modal -->
-      <div class="modal fade" id="incident-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="incident-modal-title"></h4>
-            </div>
-            <div class="modal-body">
-              <div id="incident-modal-body"></div>
-              <div id="map-canvas"></div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
 
       <hr>
 
       <footer>
-        <p><a href="http://charleswesley.net">charleswesley.net</a> | <a href="http://twitter.com/_charleswesley">@_charleswesley</a></p>
+        <p><a href="http://charleswesley.net">charleswesley.net</a> | <a href="http://twitter.com/_charleswelsey">@_charleswesley</a></p>
       </footer>
     </div> <!-- /container -->        
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
-        <script src="js/log.js"></script>
-        <script src="js/main.js"></script>
 
         <script>
             var _gaq=[['_setAccount','UA-747328-1'],['_trackPageview']];
