@@ -84,8 +84,10 @@ var log = {
 			return categories.sort();
 		}
 		else {
-			// Bubble sort on incident count.
-			return categories;
+			// Reference... bro: http://davidwalsh.name/array-sort
+			return categories.sort(function(a, b) {
+				return b.count - a.count;
+			});
 		}
 	},
 	RefreshTable: function () {
