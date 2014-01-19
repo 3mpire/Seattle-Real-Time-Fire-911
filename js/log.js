@@ -79,13 +79,24 @@ var log = {
 
 		return data;
 	},
+	SortCategories: function(categories, alphabetically) {
+		if (alphabetically) {
+			return categories.sort();
+		}
+		else {
+			// Reference... bro: http://davidwalsh.name/array-sort
+			return categories.sort(function(a, b) {
+				return b.count - a.count;
+			});
+		}
+	},
 	RefreshTable: function () {
 		var tableData = [];
 		incidents = getIncidents();
 
 		for (var i = 0; i < incidents.length; i++) {
 			var thisIncident = incidents[i];
-			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + new Date(thisIncident.DateLogged * 1000).toLocaleTimeString() + ' ' + new Date(thisIncident.DateLogged * 1000).toLocaleDateString() + '</td></tr>');
+			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + getUserFriendlyDateTime(thisIncident.DateLogged) + '</td></tr>');
 		}
 
 		$('#row-count').text('Incidents: ' + tableData.length);
@@ -102,19 +113,36 @@ var log = {
 		var categories = [], i;
 		var data = getIncidents();
 
+		// Display the time range represented by the current dataset.
+		var incidentRange = $('#incident-range');
+		var newestIncident = data[0];
+		var oldestIncident = data[data.length - 1];
+
+		incidentRange.text(getUserFriendlyDateTime(newestIncident.DateLogged) + ' - ' + getUserFriendlyDateTime(oldestIncident.DateLogged));
+
+		// Get a distinct list of categories from the current dataset.
 		for (i = 0; i < data.length; i++) {
-			if (categories.indexOf(data[i].Category) < 0) {
-				categories.push(data[i].Category);
+			var found = false;
+			for (var c = 0; c < categories.length; c++) {
+				if (categories[c].name == data[i].Category) {
+					found = true;
+				}
+			}
+
+			if (found == false) {
+				category = { name: data[i].Category, count: getIncidentCountByCategory(data[i].Category)};
+				categories.push(category);
 			}
 		}
 
 		if (categories.length > 0) {
-			categories.sort();
+			// Sort the categories alphabetically.
+			categories = log.SortCategories(categories, false)
 
 			var htmlList = '<h1>Categories</h1><ul>';
 
 			for (i = 0; i < categories.length; i++) {
-				htmlList = htmlList + '<li>' + categories[i] + '<span class=\'count\'>' + getIncidentCountByCategory(categories[i]) + '</span></li>';
+				htmlList = htmlList + '<li>' + categories[i].name + '<span class=\'count\'>' + categories[i].count + '</span></li>';
 			}
 
 			htmlList = htmlList + '</ul>';
@@ -267,6 +295,12 @@ function getIncidentCountByCategory(category) {
 	}
 
 	return count;
+}
+
+// Returns a user-friendly date/time string {00:00:00 XX MM/DD/YYYY}.
+function getUserFriendlyDateTime(date) {
+	var friendlyDate = new Date(date * 1000);
+	return friendlyDate.toLocaleTimeString() + ' ' + friendlyDate.toLocaleDateString();
 }
 
 function setIncidents(incidents) {
