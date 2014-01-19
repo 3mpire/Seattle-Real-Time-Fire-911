@@ -75,6 +75,19 @@ a:hover {
 #incident-type-summary {
 	background-color: #222;
 	color: #666;
+	position: relative;
+}
+
+#toggle-category-sort {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	text-align: center;
+}
+
+#toggle-category-sort:hover {
+	cursor: pointer;
+	color: #FFF;
 }
 
 #incident-type-summary .count {
