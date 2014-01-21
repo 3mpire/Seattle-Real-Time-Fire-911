@@ -6,6 +6,7 @@ function Incident(incidentData) {
 	this.DateLogged = incidentData.datetime ;
 	this.Lat = incidentData.report_location.latitude;
 	this.Lng = incidentData.report_location.longitude;
+	this.Highlight = true;
 };
 
 // Store all fetched incident objects in this global array.
@@ -24,7 +25,7 @@ var log = {
 			url : dataSource,
 			timeout: 10000,
 			beforeSend: function () {
-				spinner.text('Fetching latest data...');
+				spinner.text('Fetching data...');
 				spinner.slideDown('slow');
 			},
 			success: function(result) {	
@@ -39,6 +40,9 @@ var log = {
 					{
 						incidents.push(thisIncident);
 					}
+					else {
+						thisIncident.Highlight = false;
+					}
 				});
 
 				// Order array chronologically and put back into localStorage.
@@ -51,6 +55,7 @@ var log = {
 			},
 			error: function(xhr, status, error) {
 				spinner.text('Error retrieving data.');
+				console.log(status + ': ' + error);
 			}
 		}).complete(function(){
 			spinner.slideUp('slow');
@@ -96,7 +101,15 @@ var log = {
 
 		for (var i = 0; i < incidents.length; i++) {
 			var thisIncident = incidents[i];
-			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + getUserFriendlyDateTime(thisIncident.DateLogged) + '</td></tr>');
+			var cssClass;
+
+			if (thisIncident.Highlight == true || i == 0) {
+				cssClass = ' class="incident-row highlight"';
+			} else {
+				cssClass = ' class="incident-row"';
+			}
+
+			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""' + cssClass + '><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + getUserFriendlyDateTime(thisIncident.DateLogged) + '</td></tr>');
 		}
 
 		$('#row-count').text('Incidents: ' + tableData.length);
