@@ -1,9 +1,9 @@
 function refreshCountdown() {
-	if (log.SecondsTillRefresh > 0)
+	if (log.Config.SecondsTillRefresh > 0)
 	{
 		var timer = $('#refresh-timer');
-		timer.text('Refresh in ' + log.SecondsTillRefresh + ' seconds.');
-		log.SecondsTillRefresh--;
+		timer.text('Refresh in ' + log.Config.SecondsTillRefresh + ' seconds.');
+		log.Config.SecondsTillRefresh--;
 	}
 	else
 	{

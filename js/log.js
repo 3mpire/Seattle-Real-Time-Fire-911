@@ -9,12 +9,29 @@ function Incident(incidentData) {
 	this.Highlight = true;
 };
 
+// Incident data storage object.
+var Storage = {
+	Set: function (key, value) {
+			localStorage.setItem(key, JSON.stringify(value));
+		},
+	Get: function (key) {
+		if (localStorage.getItem(key) === null) {
+			this.Set(key, []);
+		}
+
+		return JSON.parse(localStorage.getItem(key));
+	}
+};
+
 // Store all fetched incident objects in this global array.
 //window.incidents = [];
 
 var log = { 
-	SecondsTillRefresh: 300,
-	BaseUri: 'https://data.seattle.gov/resource/kzjm-xkqj.json',
+	Config: {
+		SecondsTillRefresh: 300,
+		BaseUri: 'https://data.seattle.gov/resource/kzjm-xkqj.json',
+		IncidentsKey: 'incidents'
+	},
 	RefreshData: function(newest) {
 		var dataSource = log.GetDataSource(newest);
 		var spinner = $('#spinner');
@@ -29,7 +46,7 @@ var log = {
 				spinner.slideDown('slow');
 			},
 			success: function(result) {	
-				var incidents = getIncidents();
+				var incidents = Storage.Get(log.Config.IncidentsKey);
 
 				// Process the result.
 				$.each( result, function( i, incidentData ) {
@@ -46,11 +63,11 @@ var log = {
 				});
 
 				// Order array chronologically and put back into localStorage.
-				setIncidents(log.SortData(incidents));
+				Storage.Set(log.Config.IncidentsKey, log.SortData(incidents));
 
 				// Reset timer if not returning historical data and new data was found.
-				if (newest && result.length > 0 || log.SecondsTillRefresh < 1) {
-					log.SecondsTillRefresh = 300;
+				if (newest && result.length > 0 || log.Config.SecondsTillRefresh < 1) {
+					log.Config.SecondsTillRefresh = 300;
 				}
 			},
 			error: function(xhr, status, error) {
@@ -97,7 +114,8 @@ var log = {
 	},
 	RefreshTable: function () {
 		var tableData = [];
-		incidents = getIncidents();
+		//incidents = getIncidents();
+		incidents = Storage.Get(this.Config.IncidentsKey);
 
 		for (var i = 0; i < incidents.length; i++) {
 			var thisIncident = incidents[i];
@@ -124,14 +142,14 @@ var log = {
 	},
 	RefreshSummary: function() {
 		var categories = [], i;
-		var data = getIncidents();
+		var data = Storage.Get(this.Config.IncidentsKey);
 
 		// Display the time range represented by the current dataset.
 		var incidentRange = $('#incident-range');
-		var newestIncident = data[0];
-		var oldestIncident = data[data.length - 1];
+		var newest = data[0];
+		var oldest = data[data.length - 1];
 
-		incidentRange.text(getUserFriendlyDateTime(newestIncident.DateLogged) + ' - ' + getUserFriendlyDateTime(oldestIncident.DateLogged));
+		incidentRange.text(getUserFriendlyDateTime(newest.DateLogged) + ' - ' + getUserFriendlyDateTime(oldest.DateLogged));
 
 		// Get a distinct list of categories from the current dataset.
 		for (i = 0; i < data.length; i++) {
@@ -164,7 +182,7 @@ var log = {
 		}
 	},
 	GetIncident: function(incidentId) {
-		var incidents = getIncidents();
+		var incidents = Storage.Get(this.Config.IncidentsKey);
 
 		if (incidents.length > 0) {
 			for (var i = 0; i < incidents.length; i++) {
@@ -216,7 +234,7 @@ var log = {
 		map.setOptions({styles: styles});
 	},
 	GetDataSource: function(newest) {
-		var incidents = getIncidents();
+		var incidents = Storage.Get(this.Config.IncidentsKey);
 
 		if (incidents.length === 0) {
 			// Get current time in miliseconds since the epoch.
@@ -237,12 +255,12 @@ var log = {
 			if (newest) {
 				incident = getNewestIncident();
 				dateLogged = new Date(incident.DateLogged * 1000).toISOString();
-				return log.BaseUri + "?$where=datetime>'" + dateLogged + '\'';
+				return log.Config.BaseUri + "?$where=datetime>'" + dateLogged + '\'';
 			}
 			else {
 				incident = getOldestIncident();
 				dateLogged = new Date(incident.DateLogged * 1000).toISOString();
-				return log.BaseUri + "?$where=datetime<'" + dateLogged + '\'&$limit=50&$order=datetime desc';
+				return log.Config.BaseUri + "?$where=datetime<'" + dateLogged + '\'&$limit=50&$order=datetime desc';
 			}
 		}
 	}
@@ -250,7 +268,7 @@ var log = {
 
 // Checks to see if an incident already exists in the array matching on ID.
 function isIncidentLogged(incident) {
-	var incidents = getIncidents();
+	var incidents = Storage.Get(log.Config.IncidentsKey);
 	for (var i = 0; i < incidents.length; i++)
 	{
 		if (incidents[i].ID == incident.ID)
@@ -264,42 +282,42 @@ function isIncidentLogged(incident) {
 
 // Returns the most recently logged incident.
 function getNewestIncident() {
-	var newestIncident, data = getIncidents(), i;
+	var newest, data = Storage.Get(log.Config.IncidentsKey), i;
 
 	for (i = 0; i < data.length; i++)
 	{
-		if (newestIncident === undefined) {
-			newestIncident = data[i];
+		if (newest === undefined) {
+			newest = data[i];
 		}
 
-		if (newestIncident.DateLogged < data[i].DateLogged) {
-			newestIncident = data[i];
+		if (newest.DateLogged < data[i].DateLogged) {
+			newest = data[i];
 		}
 	}
 
-	return newestIncident;
+	return newest;
 }
 
 // Returns the earliest logged incident.
 function getOldestIncident() {
-	var oldestIncident, data = getIncidents(), i;
+	var oldest, data = Storage.Get(log.Config.IncidentsKey), i;
 
 	for (i = 0; i < data.length; i++) {
-		if (oldestIncident === undefined) {
-			oldestIncident = data[i];
+		if (oldest === undefined) {
+			oldest = data[i];
 		}
 
-		if (oldestIncident.DateLogged > data[i].DateLogged) {
-			oldestIncident = data[i];
+		if (oldest.DateLogged > data[i].DateLogged) {
+			oldest = data[i];
 		}
 	}
 
-	return oldestIncident;
+	return oldest;
 }
 
 // Returns the number of incidents in a single category.
 function getIncidentCountByCategory(category) {
-	var count = 0, data = getIncidents(), i;
+	var count = 0, data = Storage.Get(log.Config.IncidentsKey), i;
 
 	for (i = 0; i < data.length; i++) {
 		if (data[i].Category == category) {
@@ -316,15 +334,5 @@ function getUserFriendlyDateTime(date) {
 	return friendlyDate.toLocaleTimeString() + ' ' + friendlyDate.toLocaleDateString();
 }
 
-function setIncidents(incidents) {
-	localStorage.setItem('incidents', JSON.stringify(incidents));
-}
 
-function getIncidents(incidents) {
-	if (localStorage.getItem('incidents') === null) {
-		setIncidents([]);
-	}
-
-	return JSON.parse(localStorage.getItem('incidents'));
-}
 
