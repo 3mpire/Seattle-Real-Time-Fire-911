@@ -118,6 +118,7 @@ a:hover {
 
 #log tr.highlight>td {
 	background-color: #FFFF99;
+	color: #000;
 	-webkit-transition: background 1s ease-out;
 	-moz-transition: background 1s ease-out;
 	-o-transition: background 1s ease-out;
