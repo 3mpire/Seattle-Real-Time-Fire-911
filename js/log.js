@@ -125,7 +125,7 @@ var log = {
 
 			// OR condition for testing purposes.
 			// TODO: remove for production.
-			if (thisIncident.Highlight == true || i == 0) {
+			if (thisIncident.Highlight == true) {
 				cssClass = ' class="incident-row highlight"';
 			} else {
 				cssClass = ' class="incident-row"';
@@ -154,13 +154,6 @@ var log = {
 		var oldest = data[data.length - 1];
 
 		incidentRange.text(getUserFriendlyDateTime(newest.DateLogged) + ' - ' + getUserFriendlyDateTime(oldest.DateLogged));
-
-		// Display the time range represented by the current dataset.
-		var incidentRange = $('#incident-range');
-		var newestIncident = data[0];
-		var oldestIncident = data[data.length - 1];
-
-		incidentRange.text(getUserFriendlyDateTime(newestIncident.DateLogged) + ' - ' + getUserFriendlyDateTime(oldestIncident.DateLogged));
 
 		// Get a distinct list of categories from the current dataset.
 		for (i = 0; i < data.length; i++) {
