@@ -123,9 +123,7 @@ var log = {
 			var thisIncident = incidents[i];
 			var cssClass;
 
-			// OR condition for testing purposes.
-			// TODO: remove for production.
-			if (thisIncident.Highlight == true || i == 0) {
+			if (thisIncident.Highlight == true) {
 				cssClass = ' class="incident-row highlight"';
 			} else {
 				cssClass = ' class="incident-row"';
