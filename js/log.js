@@ -9,7 +9,9 @@ function Incident(incidentData) {
 	this.Highlight = true;
 };
 
-// Incident data storage object.
+// Incident Manager.
+
+// Data storage.
 var Storage = {
 	Set: function (key, value) {
 			localStorage.setItem(key, JSON.stringify(value));
@@ -23,8 +25,6 @@ var Storage = {
 	}
 };
 
-// Store all fetched incident objects in this global array.
-//window.incidents = [];
 
 var log = { 
 	Config: {
@@ -48,6 +48,11 @@ var log = {
 			success: function(result) {	
 				var incidents = Storage.Get(log.Config.IncidentsKey);
 
+				for (var o = 0; o < incidents.length; o++) {
+					// Toggle all existing incident Highlight flags to false.
+					incidents[o].Highlight = false;
+				}
+
 				// Process the result.
 				$.each( result, function( i, incidentData ) {
 					var thisIncident = new Incident(incidentData);
@@ -56,9 +61,6 @@ var log = {
 					if (!isIncidentLogged(thisIncident))
 					{
 						incidents.push(thisIncident);
-					}
-					else {
-						thisIncident.Highlight = false;
 					}
 				});
 
