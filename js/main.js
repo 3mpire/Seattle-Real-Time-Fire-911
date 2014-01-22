@@ -9,22 +9,30 @@ function refreshCountdown() {
 	{
 		log.RefreshData(true);
 	}
-
 	setTimeout(refreshCountdown, 1000);
+}
+
+function removeHighlight() {
+	setTimeout(function() {
+		$('.highlight').removeClass('highlight', 1000);
+	}, 5000);
 }
 
 $(document).ready(function(){
 	log.RefreshData(true);
 	setTimeout(refreshCountdown, 1000);
+	removeHighlight();
 });
 
 $("#refresh").on('click', function(event){
 	event.preventDefault();
 	log.RefreshData(true);
+	removeHighlight();
 });
 
 $('#more').on('click', function(event) {
 	log.RefreshData(false);
+	removeHighlight();
 })
 
 $('#incident-modal').on('show.bs.modal', function (event) {
