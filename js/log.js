@@ -123,6 +123,8 @@ var log = {
 			var thisIncident = incidents[i];
 			var cssClass;
 
+			// OR condition for testing purposes.
+			// TODO: remove for production.
 			if (thisIncident.Highlight == true || i == 0) {
 				cssClass = ' class="incident-row highlight"';
 			} else {
@@ -335,6 +337,3 @@ function getUserFriendlyDateTime(date) {
 	var friendlyDate = new Date(date * 1000);
 	return friendlyDate.toLocaleTimeString() + ' ' + friendlyDate.toLocaleDateString();
 }
-
-
-
