@@ -1,30 +1,38 @@
 function refreshCountdown() {
-	if (log.SecondsTillRefresh > 0)
+	if (log.Config.SecondsTillRefresh > 0)
 	{
 		var timer = $('#refresh-timer');
-		timer.text('Refresh in ' + log.SecondsTillRefresh + ' seconds.');
-		log.SecondsTillRefresh--;
+		timer.text('Refresh in ' + log.Config.SecondsTillRefresh + ' seconds.');
+		log.Config.SecondsTillRefresh--;
 	}
 	else
 	{
 		log.RefreshData(true);
 	}
-
 	setTimeout(refreshCountdown, 1000);
+}
+
+function removeHighlight() {
+	setTimeout(function() {
+		$('.highlight').removeClass('highlight', 1000);
+	}, 10000);
 }
 
 $(document).ready(function(){
 	log.RefreshData(true);
 	setTimeout(refreshCountdown, 1000);
+	removeHighlight();
 });
 
 $("#refresh").on('click', function(event){
 	event.preventDefault();
 	log.RefreshData(true);
+	removeHighlight();
 });
 
 $('#more').on('click', function(event) {
 	log.RefreshData(false);
+	removeHighlight();
 })
 
 $('#incident-modal').on('show.bs.modal', function (event) {
