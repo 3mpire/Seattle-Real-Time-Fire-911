@@ -121,11 +121,10 @@ var log = {
 
 		for (var i = 0; i < incidents.length; i++) {
 			var thisIncident = incidents[i];
-<<<<<<< HEAD
-			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + getUserFriendlyDateTime(thisIncident.DateLogged) + '</td></tr>');
-=======
 			var cssClass;
 
+			// OR condition for testing purposes.
+			// TODO: remove for production.
 			if (thisIncident.Highlight == true || i == 0) {
 				cssClass = ' class="incident-row highlight"';
 			} else {
@@ -133,7 +132,6 @@ var log = {
 			}
 
 			tableData.push('<tr data-toggle="modal" data-target="#incident-modal" id="' + thisIncident.ID + '""' + cssClass + '><td>' + thisIncident.ID + '</td><td>' + thisIncident.Category + '</td><td>' + thisIncident.Address + '</td><td>' + getUserFriendlyDateTime(thisIncident.DateLogged) + '</td></tr>');
->>>>>>> develop
 		}
 
 		$('#row-count').text('Incidents: ' + tableData.length);
@@ -157,7 +155,6 @@ var log = {
 
 		incidentRange.text(getUserFriendlyDateTime(newest.DateLogged) + ' - ' + getUserFriendlyDateTime(oldest.DateLogged));
 
-<<<<<<< HEAD
 		// Display the time range represented by the current dataset.
 		var incidentRange = $('#incident-range');
 		var newestIncident = data[0];
@@ -165,8 +162,6 @@ var log = {
 
 		incidentRange.text(getUserFriendlyDateTime(newestIncident.DateLogged) + ' - ' + getUserFriendlyDateTime(oldestIncident.DateLogged));
 
-=======
->>>>>>> develop
 		// Get a distinct list of categories from the current dataset.
 		for (i = 0; i < data.length; i++) {
 			var found = false;
@@ -349,10 +344,3 @@ function getUserFriendlyDateTime(date) {
 	var friendlyDate = new Date(date * 1000);
 	return friendlyDate.toLocaleTimeString() + ' ' + friendlyDate.toLocaleDateString();
 }
-
-function setIncidents(incidents) {
-	localStorage.setItem('incidents', JSON.stringify(incidents));
-}
-
-
-
