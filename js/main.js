@@ -15,7 +15,7 @@ function refreshCountdown() {
 function removeHighlight() {
 	setTimeout(function() {
 		$('.highlight').removeClass('highlight', 1000);
-	}, 10000);
+	}, 20000);
 }
 
 $(document).ready(function(){
