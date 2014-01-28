@@ -117,8 +117,12 @@ a:hover {
 }
 
 #log tr.highlight>td {
-	background-color: #FFFF99;
+	background-color: #ffffd4;
 	color: #000;
+}
+
+#log tr.highlight:nth-child(odd)>td {
+	background-color: #FFFF99;
 }
 
 #log tr.highlight:hover>td {
