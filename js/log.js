@@ -248,7 +248,7 @@ var log = {
 			
 			// Convert to ISO-8601 string.
 			var dayAgo = new Date(currentTime * 1000).toISOString();
-			return log.BaseUri + "?$where=datetime>'" + dayAgo + '\'';
+			return log.Config.BaseUri + "?$where=datetime>'" + dayAgo + '\'';
 			
 		}
 		else
