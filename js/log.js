@@ -35,6 +35,7 @@ var log = {
 	RefreshData: function(newest) {
 		var dataSource = log.GetDataSource(newest);
 		var spinner = $('#spinner');
+		var pane = $('#log-pane');
 
 		$.ajax({
 			type : "GET",
@@ -43,7 +44,20 @@ var log = {
 			timeout: 10000,
 			beforeSend: function () {
 				spinner.text('Fetching data...');
-				spinner.slideDown('slow');
+
+				// Center the spinner.
+				var width = $(window).width();
+    			var height = $(window).height();
+
+				spinner.css({
+		        	top: ((height / 2) - 25),
+		        	left: ((width / 2) - 50)
+		    	}).fadeIn(200);
+
+				// Only dim pane if it is visible
+				if (pane.is(":visible") === true) {
+					pane.fadeTo('fast', 0.5);
+				}
 			},
 			success: function(result) {	
 				var incidents = Storage.Get(log.Config.IncidentsKey);
@@ -77,8 +91,12 @@ var log = {
 				console.log(status + ': ' + error);
 			}
 		}).complete(function(){
-			spinner.slideUp('slow');
+			// Refresh data right away but leave message up for 1 additional second so user can read response text.
 			log.RefreshTable();
+			setTimeout(function(){
+				spinner.fadeOut(200);
+				pane.fadeTo('fast', 1.0);
+			},1000);
 	    });
 	}, 
 	SortData: function(data) {

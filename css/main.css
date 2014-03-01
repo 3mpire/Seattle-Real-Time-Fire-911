@@ -7,6 +7,24 @@ body {
 	color: #CCC;
 }
 
+#log-pane {
+	display: none;
+}
+
+.loading {
+    position: absolute;
+    display: none;
+    border: 1px solid #5c9ccc;
+    padding: 2px;
+    background-color: #5c9ccc;
+    color: #ffffff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    width: 200px;
+    text-align: center;
+    z-index: 100000;
+}
+
 .summary {
 	background-color: #222;
 }
