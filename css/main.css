@@ -12,7 +12,7 @@ body {
 }
 
 .loading {
-    position: absolute;
+    position: fixed;
     display: none;
     border: 1px solid #5c9ccc;
     padding: 2px;
