@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/3mpire/seattle-real-time-fire-911.png?label=ready&title=Ready)](https://waffle.io/3mpire/seattle-real-time-fire-911)
 Seattle-Real-Time-Fire-911
 ==========================
 
