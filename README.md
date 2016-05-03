@@ -9,4 +9,4 @@ I am using data.seattle.gov for a JSON feed of data to experiment with JavaScrip
 Demo
 ====
 
-http://911.charleswesley.net/
+http://3mpire.github.io/Seattle-Real-Time-Fire-911
