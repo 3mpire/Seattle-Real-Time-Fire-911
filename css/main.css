@@ -1,0 +1,158 @@
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+body {
+	background-color: #333;
+	color: #CCC;
+}
+
+#log-pane {
+	display: none;
+}
+
+.loading {
+    position: fixed;
+    display: none;
+    border: 1px solid #5c9ccc;
+    padding: 2px;
+    background-color: #5c9ccc;
+    color: #ffffff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    width: 200px;
+    text-align: center;
+    z-index: 100000;
+}
+
+.summary {
+	background-color: #222;
+}
+
+.table thead>tr>th, 
+.table tbody>tr>th, 
+.table tfoot>tr>th, 
+.table thead>tr>td, 
+.table tbody>tr>td, 
+.table tfoot>tr>td {
+	border-top: none;
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td, 
+.table-striped>tbody>tr:nth-child(odd)>th {
+	background-color: #222;
+}
+
+.table-striped>tbody>tr:first-child>th {
+	background-color: #000;
+}
+
+a,
+a:hover {
+	color: #FFF;
+}
+
+#map-canvas {
+	height: 500px;
+	width: 100%;
+	background-color: #666;
+}
+
+.btn-refresh {
+	float: right;
+}
+
+.btn-more-wrapper {
+	text-align: center;
+}
+
+#spinner {
+	padding: 10px;
+	background-color: #f3f3f3;
+	color: red;
+	font-weight: bolder;
+}
+
+#refresh-timer {
+	padding: 10px;
+}
+
+#row-count {
+	width: 150px;
+	float: right;
+	padding: 10px;
+	text-align: right;
+}
+
+#log tr:hover>td {
+	cursor: pointer;
+	background-color: #CCC;
+	color: #000000;
+}
+
+#incident-type-summary {
+	background-color: #222;
+	color: #666;
+	position: relative;
+}
+
+#toggle-category-sort {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	text-align: center;
+}
+
+#toggle-category-sort:hover {
+	cursor: pointer;
+	color: #FFF;
+}
+
+#incident-type-summary .count {
+	float: right;
+}
+
+#incident-type-summary h1 {
+	margin: 0;
+	padding: 10px;
+	background-color: #000;
+	font-size: 1em;
+	color: #CCC;
+}
+
+#incident-type-summary ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#incident-type-summary ul li {
+	padding: 5px 10px;
+}
+
+#incident-type-summary ul li:hover {
+	background-color: #CCC;
+}
+
+#log tr.highlight>td {
+	background-color: #ffffd4;
+	color: #000;
+}
+
+#log tr.highlight:nth-child(odd)>td {
+	background-color: #FFFF99;
+}
+
+#log tr.highlight:hover>td {
+	background-color: #000;
+	color: #FFFF99;
+}
+
+#incident-modal .modal-dialog {
+	width: 70%;
+}
+
+#incident-modal .modal-content {
+	background-color: #666;
+	color: #CCC;
+}
